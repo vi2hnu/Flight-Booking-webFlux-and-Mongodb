@@ -7,6 +7,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface FlightRepository extends ReactiveMongoRepository<Flight, Long> {
-
-    Mono<Flight> getFlightByFlightId(@NotBlank String s);
+    Mono<Flight> findFlightByName(String name);
 }

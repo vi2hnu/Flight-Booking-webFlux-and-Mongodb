@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ScheduleDTO(
-        @NotBlank
-        String flightId,
 
         @NotBlank
         String flightName,
@@ -15,16 +13,10 @@ public record ScheduleDTO(
         String airlineName,
 
         @NotBlank
-        String fromCityId,
+        String fromCityAirportCode,
 
         @NotBlank
-        String fromCityName,
-
-        @NotBlank
-        String toCityId,
-
-        @NotBlank
-        String toCityName,
+        String toCityAirportCode,
 
         @NotNull
         LocalDate departureDate,
@@ -34,9 +26,6 @@ public record ScheduleDTO(
 
         @Positive
         float price,
-
-        @Positive
-        int seatsAvailable,
 
         @Positive
         int duration

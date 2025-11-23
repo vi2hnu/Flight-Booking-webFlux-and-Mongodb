@@ -36,7 +36,7 @@ public class SearchImplementation implements SearchInterface {
                 .then();
 
         return validation.thenMany(
-                scheduleRepository.findScheduleByFromCityNameAndToCityNameAndDepartureDate(
+                scheduleRepository.findScheduleByFromCityAirportCodeAndToCityAirportCodeAndDepartureDate(
                         searchQueryDTO.fromCity(),
                         searchQueryDTO.toCity(),
                         searchQueryDTO.date()

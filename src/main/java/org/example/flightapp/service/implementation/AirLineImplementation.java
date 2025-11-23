@@ -2,8 +2,8 @@ package org.example.flightapp.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.flightapp.DTO.ScheduleDTO;
+import org.example.flightapp.exception.FlightNotFoundException;
 import org.example.flightapp.exception.ScheduleConflictException;
-import org.example.flightapp.model.entity.Flight;
 import org.example.flightapp.model.entity.Schedule;
 import org.example.flightapp.repository.FlightRepository;
 import org.example.flightapp.repository.ScheduleRepository;
@@ -28,52 +28,89 @@ public class AirLineImplementation implements AirLineInterface {
 
     private Schedule toEntity(ScheduleDTO dto) {
         Schedule schedule = new Schedule();
-        schedule.setFlightId(dto.flightId());
         schedule.setFlightName(dto.flightName());
         schedule.setAirlineName(dto.airlineName());
-        schedule.setFromCityId(dto.fromCityId());
-        schedule.setFromCityName(dto.fromCityName());
-        schedule.setToCityId(dto.toCityId());
-        schedule.setToCityName(dto.toCityName());
+        schedule.setFromCityAirportCode(dto.fromCityAirportCode());
+        schedule.setToCityAirportCode(dto.toCityAirportCode());
         schedule.setDepartureDate(dto.departureDate());
         schedule.setDepartureTime(dto.departureTime());
         schedule.setPrice(dto.price());
-        schedule.setSeatsAvailable(dto.seatsAvailable());
         schedule.setDuration(dto.duration());
         return schedule;
     }
 
+// previous approach which yielded wrong result, keeping for future references
+
+
+//    @Override
+//    public Mono<Schedule> addSchedule(ScheduleDTO dto) {
+//        Schedule schedule = toEntity(dto);
+//
+//        LocalDateTime newStart = schedule.getDepartureTime();
+//        LocalDateTime newEnd = newStart.plusMinutes(schedule.getDuration());
+//        return scheduleRepository
+//                .findScheduleByFlightNameAndDepartureDate(schedule.getFlightName(), schedule.getDepartureDate())
+//                .collectList()
+//                //validation of conflict
+//                .flatMap(existingSchedules -> {
+//
+//                    boolean conflict = existingSchedules.stream().anyMatch(s -> {
+//                        LocalDateTime existingStart = s.getDepartureTime();
+//                        LocalDateTime existingEnd = existingStart.plusMinutes(s.getDuration());
+//
+//                        //checking if a schedule for the flight already exists at the requested time
+//                        return newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
+//                    });
+//
+//                    if (conflict) {
+//                        log.error("Schedule already exists");
+//                        return Mono.error(new ScheduleConflictException(
+//                                "Conflict: schedule overlaps with existing flight timings."
+//                        ));
+//                    }
+//
+//                    return scheduleRepository.save(schedule);
+//                });
+//    }
+
     @Override
     public Mono<Schedule> addSchedule(ScheduleDTO dto) {
-        Schedule schedule = toEntity(dto);
+        return flightRepository.findFlightByName(dto.flightName())
+                .switchIfEmpty(
+                        Mono.defer(() -> {
+                            log.error("Flight not found");
+                            return Mono.error(new FlightNotFoundException("Flight not found"));
+                        })
+                )
+                .flatMap(flight -> {
+                    Schedule schedule = toEntity(dto);
+                    schedule.setSeatsAvailable(flight.getRows() * flight.getColumns());
+                    LocalDateTime newStart = schedule.getDepartureTime();
+                    LocalDateTime newEnd = newStart.plusMinutes(schedule.getDuration());
+                    return scheduleRepository
+                            .findScheduleByFlightNameAndDepartureDate(schedule.getFlightName(), schedule.getDepartureDate())
+                            .collectList()
 
-        LocalDateTime newStart = schedule.getDepartureTime();
-        LocalDateTime newEnd = newStart.plusMinutes(schedule.getDuration());
-        Mono<Flight> flight = flightRepository.getFlightByFlightId(dto.flightId());
-        // if no flight throw error
-        int numberOfSeats = flight.block().getRows() * flight.block().getColumns();
-        return scheduleRepository
-                .findByFlightIdAndDepartureDate(schedule.getFlightId(), schedule.getDepartureDate())
-                .collectList()
-                //validation of conflict
-                .flatMap(existingSchedules -> {
+                            //validation of conflict
+                            .flatMap(existingSchedules -> {
 
-                    boolean conflict = existingSchedules.stream().anyMatch(s -> {
-                        LocalDateTime existingStart = s.getDepartureTime();
-                        LocalDateTime existingEnd = existingStart.plusMinutes(s.getDuration());
+                                boolean conflict = existingSchedules.stream().anyMatch(s -> {
+                                    LocalDateTime existingStart = s.getDepartureTime();
+                                    LocalDateTime existingEnd = existingStart.plusMinutes(s.getDuration());
 
-                        //checking if a schedule for the flight already exists at the requested time
-                        return newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
-                    });
+                                    //checking if a schedule for the flight already exists at the requested time
+                                    return newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
+                                });
 
-                    if (conflict) {
-                        log.error("Schedule already exists");
-                        return Mono.error(new ScheduleConflictException(
-                                "Conflict: schedule overlaps with existing flight timings."
-                        ));
-                    }
+                                if (conflict) {
+                                    log.error("Schedule already exists");
+                                    return Mono.error(new ScheduleConflictException(
+                                            "Conflict: schedule overlaps with existing flight timings."
+                                    ));
+                                }
 
-                    return scheduleRepository.save(schedule);
+                                return scheduleRepository.save(schedule);
+                            });
                 });
     }
 }

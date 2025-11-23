@@ -7,6 +7,6 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDate;
 
 public interface ScheduleRepository extends ReactiveMongoRepository<Schedule, Long> {
-    Flux<Schedule> findScheduleByFromCityNameAndToCityNameAndDepartureDate(String fromCity, String toCity,LocalDate date);
-    Flux<Schedule> findByFlightIdAndDepartureDate(String flightId,LocalDate date);
+    Flux<Schedule> findScheduleByFromCityAirportCodeAndToCityAirportCodeAndDepartureDate(String fromCityAirportCode, String toCityAirportCode, LocalDate date);
+    Flux<Schedule> findScheduleByFlightNameAndDepartureDate(String flightName,LocalDate date);
 }

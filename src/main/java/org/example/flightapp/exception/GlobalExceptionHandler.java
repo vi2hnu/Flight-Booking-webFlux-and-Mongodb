@@ -40,5 +40,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCityNotFoundException(CityNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    //handling flight not found exception
+    @ExceptionHandler(FlightNotFoundException.class)
+    public ResponseEntity<String> handleFlightNotFoundException(FlightNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
 
