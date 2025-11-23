@@ -6,7 +6,7 @@ import org.example.flightapp.model.enums.Meal;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "Passenger")
+@Document(collection = "Passenger")
 @Data
 public class Passenger {
     @Id

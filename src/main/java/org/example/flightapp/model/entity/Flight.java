@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Year;
 
-@Document(collation = "Flight")
+@Document(collection = "Flight")
 @Data
 public class Flight {
     @Id

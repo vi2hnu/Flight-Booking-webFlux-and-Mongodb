@@ -5,7 +5,7 @@ import org.example.flightapp.model.enums.Gender;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "Users")
+@Document(collection = "Users")
 @Data
 public class Users {
     @Id
