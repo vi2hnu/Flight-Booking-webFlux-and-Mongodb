@@ -25,20 +25,21 @@ public class SearchImplementation implements SearchInterface {
 
     @Override
     public Flux<Schedule> searchFlight(SearchQueryDTO searchQueryDTO) {
+        //validating the both the cities first
         Mono<Void> validation = Mono.zip(
-                        cityRepository.findCityByCityName(searchQueryDTO.fromCity())
-                                .doOnNext(city->log.error("City not found"))
-                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.fromCity()))),
-                        cityRepository.findCityByCityName(searchQueryDTO.toCity())
-                                .doOnNext(city->log.error("City not found"))
-                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.toCity())))
+                        cityRepository.findCityByAirportCode(searchQueryDTO.fromCityAirportCode())
+                                .doOnNext(city->log.error("City not found: " + searchQueryDTO.fromCityAirportCode()))
+                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.fromCityAirportCode()))),
+                        cityRepository.findCityByAirportCode(searchQueryDTO.toCityAirportCode())
+                                .doOnNext(city->log.error("City not found: " + searchQueryDTO.toCityAirportCode()))
+                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.toCityAirportCode())))
                 )
                 .then();
 
         return validation.thenMany(
                 scheduleRepository.findScheduleByFromCityAirportCodeAndToCityAirportCodeAndDepartureDate(
-                        searchQueryDTO.fromCity(),
-                        searchQueryDTO.toCity(),
+                        searchQueryDTO.fromCityAirportCode(),
+                        searchQueryDTO.toCityAirportCode(),
                         searchQueryDTO.date()
                 )
         );

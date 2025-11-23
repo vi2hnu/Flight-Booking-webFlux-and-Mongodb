@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface CityRepository extends ReactiveMongoRepository<City, String> {
-    Mono<City> findCityByCityName(String cityName);
+    Mono<City> findCityByAirportCode(String airportCode);
 }

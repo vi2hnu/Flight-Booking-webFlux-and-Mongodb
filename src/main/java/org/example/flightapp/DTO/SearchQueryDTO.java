@@ -6,10 +6,10 @@ import java.time.LocalDate;
 
 public record SearchQueryDTO(
         @NotNull
-        String fromCity,
+        String fromCityAirportCode,
 
         @NotNull
-        String toCity,
+        String toCityAirportCode,
 
         @NotNull
         LocalDate date) {
