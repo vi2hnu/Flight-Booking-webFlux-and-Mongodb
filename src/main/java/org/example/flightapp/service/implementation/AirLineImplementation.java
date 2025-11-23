@@ -3,7 +3,9 @@ package org.example.flightapp.service.implementation;
 import lombok.extern.slf4j.Slf4j;
 import org.example.flightapp.DTO.ScheduleDTO;
 import org.example.flightapp.exception.ScheduleConflictException;
+import org.example.flightapp.model.entity.Flight;
 import org.example.flightapp.model.entity.Schedule;
+import org.example.flightapp.repository.FlightRepository;
 import org.example.flightapp.repository.ScheduleRepository;
 import org.example.flightapp.service.AirLineInterface;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,11 @@ public class AirLineImplementation implements AirLineInterface {
 
 
     private final ScheduleRepository scheduleRepository;
+    private final FlightRepository flightRepository;
 
-    public AirLineImplementation(ScheduleRepository scheduleRepository) {
+    public AirLineImplementation(ScheduleRepository scheduleRepository, FlightRepository flightRepository) {
         this.scheduleRepository = scheduleRepository;
+        this.flightRepository = flightRepository;
     }
 
     private Schedule toEntity(ScheduleDTO dto) {
@@ -45,7 +49,9 @@ public class AirLineImplementation implements AirLineInterface {
 
         LocalDateTime newStart = schedule.getDepartureTime();
         LocalDateTime newEnd = newStart.plusMinutes(schedule.getDuration());
-
+        Mono<Flight> flight = flightRepository.getFlightByFlightId(dto.flightId());
+        // if no flight throw error
+        int numberOfSeats = flight.block().getRows() * flight.block().getColumns();
         return scheduleRepository
                 .findByFlightIdAndDepartureDate(schedule.getFlightId(), schedule.getDepartureDate())
                 .collectList()

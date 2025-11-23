@@ -3,7 +3,6 @@ package org.example.flightapp.service.implementation;
 import lombok.extern.slf4j.Slf4j;
 import org.example.flightapp.DTO.SearchQueryDTO;
 import org.example.flightapp.exception.CityNotFoundException;
-import org.example.flightapp.model.entity.City;
 import org.example.flightapp.model.entity.Schedule;
 import org.example.flightapp.repository.CityRepository;
 import org.example.flightapp.repository.ScheduleRepository;
