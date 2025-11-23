@@ -1,0 +1,13 @@
+package org.example.flightapp.model.entity;
+
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collation = "Airline")
+@Data
+public class Airline {
+    @Id
+    private String id;
+    private String airlineName;
+}
