@@ -35,5 +35,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    //handling city not found exception
+    @ExceptionHandler(CityNotFoundException.class)
+    public ResponseEntity<String> handleCityNotFoundException(CityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
 
