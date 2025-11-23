@@ -1,4 +1,4 @@
-package org.example.flightapp;
+package org.example.flightapp.DTO;
 
 import java.time.LocalDate;
 
