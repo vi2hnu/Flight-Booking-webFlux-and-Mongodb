@@ -17,7 +17,7 @@ public class Ticket {
 
     private String pnr;
     private String bookedByUserId;
-    private String scheduleId;
+    private Schedule schedule;
     private String returnTripId;
 
     private List<Passenger> passengers = new ArrayList<>();

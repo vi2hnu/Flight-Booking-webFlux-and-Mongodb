@@ -13,13 +13,10 @@ public class Schedule {
 
     @Id
     private String id;
-    private String flightId;
     private String flightName;
     private String airlineName;
-    private String fromCityId;
-    private String fromCityName;
-    private String toCityId;
-    private String toCityName;
+    private String fromCityAirportCode;
+    private String toCityAirportCode;
     private LocalDate departureDate;
     private LocalDateTime departureTime;
     private float price;
