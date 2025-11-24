@@ -2,11 +2,10 @@ package org.example.flightapp.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.flightapp.DTO.TicketBookingDTO;
-import org.example.flightapp.exception.NotEnoughSeatsException;
-import org.example.flightapp.exception.ScheduleNotFoundException;
-import org.example.flightapp.exception.SeatsAlreadyBookedException;
+import org.example.flightapp.exception.*;
 import org.example.flightapp.model.entity.BookedSeats;
 import org.example.flightapp.model.entity.Passenger;
+import org.example.flightapp.model.entity.Schedule;
 import org.example.flightapp.model.entity.Ticket;
 import org.example.flightapp.model.enums.Status;
 import org.example.flightapp.repository.BookedSeatsRepository;
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -124,4 +125,42 @@ public class TicketBookingImplementation implements TicketBookingInterface {
     public Flux<Ticket> getTicketHistory(String email) {
         return ticketRepository.findTicketsByBookedByUserEmail(email);
     }
+
+    @Override
+    public Mono<Void> deleteTicket(String pnr) {
+        return ticketRepository.findTicketByPnr(pnr)
+                //ticket validation
+                .switchIfEmpty(Mono.error(new TicketNotFoundException("Ticket not found")))
+                .flatMap(ticket ->
+                        scheduleRepository.findScheduleById(ticket.getSchedule().getId())
+                                .flatMap(schedule -> {
+                                    long timeDifference = Duration.between(LocalDateTime.now(), schedule.getDepartureTime()).toHours();
+
+                                    //checking if the user is trying to cancel ticket within 24 hours window
+                                    if(timeDifference < 24){
+                                        return Mono.error(new TicketCancellationException("Can't delete ticket within 24 hours"));
+                                    }
+
+                                    //setting the status of ticket and deleting passengers and seats booked
+                                    ticket.setStatus(Status.CANCELLED);
+
+                                    Mono<Ticket> ticketSave = ticketRepository.save(ticket);
+                                    schedule.setSeatsAvailable(schedule.getSeatsAvailable() + ticket.getPassengers().size());
+                                    Mono<Schedule> scheduleSave = scheduleRepository.save(schedule);
+
+                                    Mono<Void> passengersAndSeats =
+                                            Flux.fromIterable(ticket.getPassengers())
+                                                    .flatMap(passenger ->
+                                                            bookedSeatsRepository
+                                                                    .deleteByScheduleIdAndSeatPos(schedule.getId(), passenger.getSeatPosition())
+                                                                    .then(passengerRepository.delete(passenger))
+                                                    )
+                                                    .then();
+
+                                    return Mono.when(ticketSave, scheduleSave, passengersAndSeats);
+                                })
+                )
+                .then();
+    }
+
 }

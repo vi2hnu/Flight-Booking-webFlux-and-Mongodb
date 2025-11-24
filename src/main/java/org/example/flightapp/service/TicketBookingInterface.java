@@ -8,4 +8,5 @@ import reactor.core.publisher.Mono;
 public interface TicketBookingInterface {
     Mono<Ticket> bookTicket(TicketBookingDTO ticketBookingDTO);
     Flux<Ticket> getTicketHistory(String email);
+    Mono<Void>   deleteTicket(String pnr);
 }

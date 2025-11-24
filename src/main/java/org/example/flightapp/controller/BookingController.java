@@ -30,4 +30,12 @@ public class BookingController {
     public Flux<Ticket> getBookingHistory(@PathVariable String emailId){
         return ticketBookingInterface.getTicketHistory(emailId);
     }
+
+    @DeleteMapping("/cancel/{pnr}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<ResponseEntity<Void>> cancelBooking(@PathVariable String pnr){
+        return ticketBookingInterface.deleteTicket(pnr).map(saved -> ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build());
+    }
 }

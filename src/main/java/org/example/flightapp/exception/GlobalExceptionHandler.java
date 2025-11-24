@@ -71,5 +71,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    //handling ticket cancellation exception
+    @ExceptionHandler(TicketCancellationException.class)
+    public ResponseEntity<String> handleTicketCancellationException(TicketCancellationException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }
 
