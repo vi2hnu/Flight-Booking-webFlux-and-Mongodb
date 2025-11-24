@@ -39,40 +39,6 @@ public class AirLineImplementation implements AirLineInterface {
         return schedule;
     }
 
-// previous approach which yielded wrong result, keeping for future references
-
-
-//    @Override
-//    public Mono<Schedule> addSchedule(ScheduleDTO dto) {
-//        Schedule schedule = toEntity(dto);
-//
-//        LocalDateTime newStart = schedule.getDepartureTime();
-//        LocalDateTime newEnd = newStart.plusMinutes(schedule.getDuration());
-//        return scheduleRepository
-//                .findScheduleByFlightNameAndDepartureDate(schedule.getFlightName(), schedule.getDepartureDate())
-//                .collectList()
-//                //validation of conflict
-//                .flatMap(existingSchedules -> {
-//
-//                    boolean conflict = existingSchedules.stream().anyMatch(s -> {
-//                        LocalDateTime existingStart = s.getDepartureTime();
-//                        LocalDateTime existingEnd = existingStart.plusMinutes(s.getDuration());
-//
-//                        //checking if a schedule for the flight already exists at the requested time
-//                        return newStart.isBefore(existingEnd) && existingStart.isBefore(newEnd);
-//                    });
-//
-//                    if (conflict) {
-//                        log.error("Schedule already exists");
-//                        return Mono.error(new ScheduleConflictException(
-//                                "Conflict: schedule overlaps with existing flight timings."
-//                        ));
-//                    }
-//
-//                    return scheduleRepository.save(schedule);
-//                });
-//    }
-
     @Override
     public Mono<Schedule> addSchedule(ScheduleDTO dto) {
         return flightRepository.findFlightByName(dto.flightName())

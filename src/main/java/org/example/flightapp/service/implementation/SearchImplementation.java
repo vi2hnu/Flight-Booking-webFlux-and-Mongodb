@@ -25,14 +25,15 @@ public class SearchImplementation implements SearchInterface {
 
     @Override
     public Flux<Schedule> searchFlight(SearchQueryDTO searchQueryDTO) {
+        String cityNotFoundError = "City Not Found: ";
         //validating the both the cities first
         Mono<Void> validation = Mono.zip(
                         cityRepository.findCityByAirportCode(searchQueryDTO.fromCityAirportCode())
-                                .doOnNext(city->log.error("City not found: " + searchQueryDTO.fromCityAirportCode()))
-                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.fromCityAirportCode()))),
+                                .doOnNext(city->log.error(cityNotFoundError + searchQueryDTO.fromCityAirportCode()))
+                                .switchIfEmpty(Mono.error(new CityNotFoundException(cityNotFoundError + searchQueryDTO.fromCityAirportCode()))),
                         cityRepository.findCityByAirportCode(searchQueryDTO.toCityAirportCode())
-                                .doOnNext(city->log.error("City not found: " + searchQueryDTO.toCityAirportCode()))
-                                .switchIfEmpty(Mono.error(new CityNotFoundException("City not found: " + searchQueryDTO.toCityAirportCode())))
+                                .doOnNext(city->log.error(cityNotFoundError + searchQueryDTO.toCityAirportCode()))
+                                .switchIfEmpty(Mono.error(new CityNotFoundException(cityNotFoundError + searchQueryDTO.toCityAirportCode())))
                 )
                 .then();
 
