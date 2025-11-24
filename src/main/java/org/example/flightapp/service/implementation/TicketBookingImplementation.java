@@ -119,4 +119,9 @@ public class TicketBookingImplementation implements TicketBookingInterface {
                             });
                 });
     }
+
+    @Override
+    public Flux<Ticket> getTicketHistory(String email) {
+        return ticketRepository.findTicketsByBookedByUserEmail(email);
+    }
 }

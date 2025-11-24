@@ -7,6 +7,7 @@ import org.example.flightapp.service.TicketBookingInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -23,5 +24,10 @@ public class BookingController {
         return ticketBookingInterface.bookTicket(ticketBookingDTO).map(saved -> ResponseEntity
                                                         .status(HttpStatus.CREATED)
                                                         .body(saved));
+    }
+
+    @GetMapping("/history/{emailId}")
+    public Flux<Ticket> getBookingHistory(@PathVariable String emailId){
+        return ticketBookingInterface.getTicketHistory(emailId);
     }
 }
