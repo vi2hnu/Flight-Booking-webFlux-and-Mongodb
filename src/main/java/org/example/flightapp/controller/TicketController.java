@@ -25,7 +25,7 @@ public class TicketController {
     public Mono<ResponseEntity<Ticket>> getTicket(@PathVariable("pnr") String pnr) {
         log.info(pnr);
         return ticketDetailsInterface.getTicketDetails(pnr).map(saved -> ResponseEntity
-                                                        .status(HttpStatus.CREATED)
+                                                        .status(HttpStatus.OK)
                                                         .body(saved));
     }
 }
