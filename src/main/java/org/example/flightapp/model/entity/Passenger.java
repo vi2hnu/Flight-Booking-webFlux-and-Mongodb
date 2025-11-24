@@ -1,6 +1,7 @@
 package org.example.flightapp.model.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.flightapp.DTO.PassengerDTO;
 import org.example.flightapp.model.enums.Gender;
 import org.example.flightapp.model.enums.Meal;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Passenger")
+@NoArgsConstructor
 @Data
 public class Passenger {
     @Id

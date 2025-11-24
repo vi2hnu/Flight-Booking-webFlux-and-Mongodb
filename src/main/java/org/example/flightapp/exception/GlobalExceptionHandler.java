@@ -64,5 +64,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleSeatsAlreadyBookedException(SeatsAlreadyBookedException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    //handling ticket not found exception
+    @ExceptionHandler(TicketNotFoundException.class)
+    public ResponseEntity<String> handleScheduleNotFoundException(TicketNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
 }
 

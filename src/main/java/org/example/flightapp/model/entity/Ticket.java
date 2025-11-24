@@ -18,8 +18,6 @@ public class Ticket {
 
     @Indexed(unique = true)
     private String pnr;
-
-    private String bookedByUserId;
     private Schedule schedule;
     private Schedule returnTrip;
     private String bookedByUserEmail;
