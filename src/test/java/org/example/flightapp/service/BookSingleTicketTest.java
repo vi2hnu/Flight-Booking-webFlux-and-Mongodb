@@ -12,7 +12,6 @@ import org.example.flightapp.model.entity.Schedule;
 import org.example.flightapp.model.entity.Ticket;
 import org.example.flightapp.model.enums.Gender;
 import org.example.flightapp.model.enums.Meal;
-import org.example.flightapp.model.enums.Status;
 import org.example.flightapp.repository.BookedSeatsRepository;
 import org.example.flightapp.repository.PassengerRepository;
 import org.example.flightapp.repository.ScheduleRepository;
@@ -26,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +45,6 @@ public class BookSingleTicketTest {
 
     @InjectMocks
     private TicketBookingImplementation booking;
-
-    private Passenger passenger(String seat) {
-        Passenger p = new Passenger();
-        p.setSeatPosition(seat);
-        return p;
-    }
 
     @Test
     void bookTicket_scheduleNotFound() {

@@ -1,6 +1,5 @@
 package org.example.flightapp.service;
 
-import org.example.flightapp.DTO.ScheduleDTO;
 import org.example.flightapp.DTO.SearchQueryDTO;
 import org.example.flightapp.exception.CityNotFoundException;
 import org.example.flightapp.model.entity.City;
@@ -18,7 +17,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.when;
 
@@ -33,17 +31,6 @@ public class SearchServiceTest {
 
     @InjectMocks
     private SearchImplementation searchImplementation;
-
-    private ScheduleDTO scheduleDTOObject(){
-        return  new ScheduleDTO("Test Flight",
-                "Fake Airlines",
-                "MAA",
-                "DEL",
-                LocalDate.now(),
-                LocalDateTime.now(),
-                4311,
-                120);
-    }
 
     @Test
     void searchSchedule_throwsCityNotFound(){
