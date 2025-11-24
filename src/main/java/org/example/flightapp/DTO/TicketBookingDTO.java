@@ -8,12 +8,12 @@ import java.util.List;
 
 public record TicketBookingDTO(
         @NotNull
-        Users user,
+        String userEmail,
 
         @NotNull
-        Long scheduleId,
+        String scheduleId,
 
-        Long returnTripId,
+        String returnTripId,
 
         @NotEmpty
         List<PassengerDTO>passengers) {

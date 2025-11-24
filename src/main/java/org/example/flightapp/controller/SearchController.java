@@ -16,27 +16,13 @@ import reactor.core.publisher.Mono;
 public class SearchController {
 
     private final SearchInterface searchInterface;
-    private final CityRepository cityRepository;
     public SearchController(SearchInterface searchInterface, CityRepository cityRepository) {
         this.searchInterface = searchInterface;
-        this.cityRepository = cityRepository;
     }
 
     @PostMapping("")
     public Flux<Schedule> searchFlight(@RequestBody SearchQueryDTO searchQueryDTO) {
         return searchInterface.searchFlight(searchQueryDTO);
-//        return schedules.hasElements()
-//                .flatMap(hasElements -> {
-//                    if (hasElements) {
-//                        return Mono.just(ResponseEntity.ok(schedules));
-//                    } else {
-//                        return Mono.just(ResponseEntity.notFound().build());
-//                    }
-//                });
     }
 
-    @GetMapping("/{city}")
-    public Publisher<City> searchFlightByCity(@PathVariable String city) {
-        return cityRepository.findCityByAirportCode(city);
-    }
 }

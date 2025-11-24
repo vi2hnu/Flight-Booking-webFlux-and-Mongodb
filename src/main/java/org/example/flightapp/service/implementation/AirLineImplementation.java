@@ -76,6 +76,7 @@ public class AirLineImplementation implements AirLineInterface {
     @Override
     public Mono<Schedule> addSchedule(ScheduleDTO dto) {
         return flightRepository.findFlightByName(dto.flightName())
+                //validation to check if the flight exists
                 .switchIfEmpty(
                         Mono.defer(() -> {
                             log.error("Flight not found");

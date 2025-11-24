@@ -1,5 +1,6 @@
 package org.example.flightapp.model.entity;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,4 +12,9 @@ public class BookedSeats {
     private String id;
     private String seatPos;
     private String scheduleId;
+
+    public BookedSeats(String scheduleId, String seatPos) {
+        this.scheduleId = scheduleId;
+        this.seatPos = seatPos;
+    }
 }

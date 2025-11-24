@@ -1,6 +1,7 @@
 package org.example.flightapp.model.entity;
 
 import lombok.Data;
+import org.example.flightapp.DTO.PassengerDTO;
 import org.example.flightapp.model.enums.Gender;
 import org.example.flightapp.model.enums.Meal;
 import org.springframework.data.annotation.Id;
@@ -15,4 +16,11 @@ public class Passenger {
     private Gender gender;
     private Meal mealOption;
     String seatPosition;  //eg.12A
+
+    public Passenger(PassengerDTO passengerDTO) {
+        this.name = passengerDTO.name();
+        this.gender = passengerDTO.gender();
+        this.mealOption = passengerDTO.meal();
+        this.seatPosition = passengerDTO.seatPos();
+    }
 }

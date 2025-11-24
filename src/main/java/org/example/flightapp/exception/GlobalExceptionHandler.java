@@ -46,5 +46,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleFlightNotFoundException(FlightNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    //handling schedule not found exception
+    @ExceptionHandler(ScheduleNotFoundException.class)
+    public ResponseEntity<String> handleScheduleNotFoundException(ScheduleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    //handling not enough seats available
+    @ExceptionHandler(NotEnoughSeatsException.class)
+    public ResponseEntity<String> handleNotEnoughSeatsException(NotEnoughSeatsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    //handling seats already booked exception
+    @ExceptionHandler(SeatsAlreadyBookedException.class)
+    public ResponseEntity<String> handleSeatsAlreadyBookedException(SeatsAlreadyBookedException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }
 
