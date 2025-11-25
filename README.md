@@ -42,6 +42,8 @@ A reactive Flight Booking application built using Spring Boot WebFlux.
 ## SonarQube Report
 <img width="1451" height="274" alt="Image" src="https://github.com/user-attachments/assets/2cb33c7a-0a4c-43ca-b4ea-dc17f4650955" />
 
+Link = https://sonarcloud.io/summary/overall?id=vi2hnu_Flight-Booking-webFlux-and-Mongodb&branch=main
+
 ## JaCoCO Report
 <img width="1562" height="346" alt="Image" src="https://github.com/user-attachments/assets/4c4b3fa1-78e1-4342-b477-c7a5100098d5" />
 
