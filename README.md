@@ -38,7 +38,6 @@ A reactive Flight Booking application built using Spring Boot WebFlux.
 | GET    | /api/v1.0/flight/booking/history/{emailId} | Get booked ticket history by email ID |
 | DELETE | /api/v1.0/flight/booking/cancel/{pnr} | Cancel a booked ticket using PNR |
 
-(note: find example api request and response in report.pdf or report.doc)
 
 ## SonarQube Report
 <img width="1451" height="274" alt="Image" src="https://github.com/user-attachments/assets/2cb33c7a-0a4c-43ca-b4ea-dc17f4650955" />
